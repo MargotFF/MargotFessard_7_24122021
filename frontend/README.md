@@ -1,4 +1,4 @@
-# groupomania-cli-app
+# Frontend Groupomania
 
 ## Project setup
 ```
