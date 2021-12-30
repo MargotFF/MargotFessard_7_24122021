@@ -1,24 +1,21 @@
 # Frontend Groupomania
 
-## Project setup
+### Installation
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### Compilation pour le développement
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+### Compilation et minification pour la production
 ```
 npm run build
 ```
 
-### Lints and fixes files
+### Lints et fixes
 ```
 npm run lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
