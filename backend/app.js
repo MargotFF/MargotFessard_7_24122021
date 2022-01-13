@@ -1,12 +1,13 @@
 const express = require('express');
 const helmet = require("helmet");
 const bodyParser = require('body-parser');
+const path = require('path');
 
 require('dotenv').config({ path: './.env' });
 
 const sequelize = require('./database/mysql');
 const User = require('./models/user');
-sequelize.sync({ force: true });
+sequelize.sync();
 
 const userRoutes = require('./routes/user');
 
@@ -23,6 +24,7 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 
+app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/api/auth', userRoutes);
 
 module.exports = app;
