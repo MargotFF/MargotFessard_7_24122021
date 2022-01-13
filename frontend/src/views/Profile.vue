@@ -37,7 +37,7 @@
       </div>
       <div class="form-group">
         <label for="newPassword">Nouveau mot de passe</label>
-        <input type="newPassword" id="newPassword" class="form-control" v-model="user.newPassword">
+        <input type="password" id="newPassword" class="form-control" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$">
       </div>
     </div>
     <button @click="displayForm()">{{ showForm ? "Annuler les modifications" : "Modifier mon profil" }}</button>
@@ -54,16 +54,7 @@
     components: { Navbar },
     data() {
       return {
-        user: {
-          firstName: '',
-          lastName: '',
-          userName: '',
-          jobTitle: '',
-          email: '',
-          password: '',
-          newPassword: '',
-          isAdmin: false,
-        },
+        user: {},
         showForm: false
       }
     },
@@ -85,8 +76,30 @@
         this.showForm = !this.showForm
       },
       updateProfile() {
+        const newPassword = document.getElementById('newPassword').value;
+        let data;
+
+        if (newPassword === "") {
+          data = {
+            firstName: this.user.firstName,
+            lastName: this.user.lastName,
+            userName: this.user.userName,
+            jobTitle: this.user.jobTitle,
+            email: this.user.email
+          };
+        } else {
+          data = {
+            firstName: this.user.firstName,
+            lastName: this.user.lastName,
+            userName: this.user.userName,
+            jobTitle: this.user.jobTitle,
+            email: this.user.email,
+            newPassword: newPassword
+          };
+        }
+
         const token = JSON.parse(localStorage.getItem('groupomania:token'));
-        axios.put('http://localhost:3000/api/auth/profile', this.user,
+        axios.put('http://localhost:3000/api/auth/profile', data,
           {
             headers: {
               'Authorization': `Bearer ${token}`
@@ -95,6 +108,7 @@
           .then(response => {
             console.log(response.data)
             this.user = response.data
+            this.showForm = false
           })
           .catch(error => console.error(error.response))
       },

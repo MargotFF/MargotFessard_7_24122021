@@ -6,10 +6,10 @@ const path = require('path');
 require('dotenv').config({ path: './.env' });
 
 const sequelize = require('./database/mysql');
-const User = require('./models/user');
-sequelize.sync();
+sequelize.sync({ alter: true });
 
 const userRoutes = require('./routes/user');
+const postRoutes = require('./routes/post');
 
 const app = express();
 
@@ -26,5 +26,6 @@ app.use(bodyParser.json());
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/api/auth', userRoutes);
+app.use('/api/posts', postRoutes);
 
 module.exports = app;
