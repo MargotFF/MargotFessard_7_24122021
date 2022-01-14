@@ -46,11 +46,11 @@ const User = sequelize.define('user', {
   }
 })
 
-User.associate = function(models) {
-  User.hasMany(models.Post, {
-    foreignKey: 'userId',
-    as: 'posts'
-  })
-}
+// User.associate = function(models) {
+//   User.hasMany(models.Post, {
+//     onDelete: 'CASCADE',
+//     hooks: true
+//   })
+// }
 
 module.exports = User;

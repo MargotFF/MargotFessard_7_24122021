@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../database/mysql');
+const User = require("../models/user");
 
 const Post = sequelize.define('post', {
   id: {
@@ -10,29 +11,25 @@ const Post = sequelize.define('post', {
   },
   message: {
     type: Sequelize.TEXT,
-    allowNull: true
+    allowNull: false
   },
   imageURL: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: true
   },
   userId: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    unique: true,
+    type: Sequelize.INTEGER,
     references: {
-      model: 'User',
-      key: 'id'
+      model: User,
+      key: User.id
     }
   }
-})
+});
 
-Post.associate = function(models) {
-  Post.belongsTo(models.User, {
-    foreignKey: 'userId',
-    as: 'user',
-    onDelete: 'CASCADE'
-  })
-}
+// Post.associate = function(models) {
+//   Post.belongsTo(models.User, {
+//     foreignKey: 'userId',
+//   })
+// };
 
 module.exports = Post;

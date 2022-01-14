@@ -58,20 +58,20 @@
         showForm: false
       }
     },
-    mounted() {
-      const token = JSON.parse(localStorage.getItem('groupomania:token'))
-      axios.get('http://localhost:3000/api/auth/profile', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
-        .then(response => {
-          console.log(response.data)
-          this.user = response.data
-        })
-        .catch(error => console.error(error.response));
-    },
     methods: {
+      getProfile() {
+        const token = JSON.parse(localStorage.getItem('groupomania:token'))
+        axios.get('http://localhost:3000/api/auth/profile', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        })
+          .then(response => {
+            console.log(response.data)
+            this.user = response.data
+          })
+          .catch(error => console.error(error.response));
+      },
       displayForm() {
         this.showForm = !this.showForm
       },
@@ -108,6 +108,7 @@
           .then(response => {
             console.log(response.data)
             this.user = response.data
+            this.getProfile()
             this.showForm = false
           })
           .catch(error => console.error(error.response))
@@ -127,6 +128,20 @@
           .catch(error => console.error(error.response))
       }
     },
+    mounted() {
+      this.getProfile()
+      // const token = JSON.parse(localStorage.getItem('groupomania:token'))
+      // axios.get('http://localhost:3000/api/auth/profile', {
+      //   headers: {
+      //     'Authorization': `Bearer ${token}`
+      //   }
+      // })
+      //   .then(response => {
+      //     console.log(response.data)
+      //     this.user = response.data
+      //   })
+      //   .catch(error => console.error(error.response));
+    }
   }
 </script>
 

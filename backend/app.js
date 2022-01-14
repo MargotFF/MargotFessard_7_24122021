@@ -6,7 +6,7 @@ const path = require('path');
 require('dotenv').config({ path: './.env' });
 
 const sequelize = require('./database/mysql');
-sequelize.sync({ alter: true });
+sequelize.sync();
 
 const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
