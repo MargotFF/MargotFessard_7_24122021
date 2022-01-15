@@ -7,7 +7,7 @@ const {Op} = require('sequelize');
 require('dotenv').config({ path: '../.env'});
 
 const User = require('../models/user');
-const { getUserDecodedToken } = require('../middleware/utils');
+const { getUserDecodedToken } = require('../utils/index');
 
 const passwordSchema = new passwordValidator();
 passwordSchema
@@ -46,9 +46,9 @@ exports.signup = (req, res, next) => {
         // avatar: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null,
       })
         .then(() => res.status(201).json({ message: 'User created !' }))
-        .catch(error => res.status(400).json({ message: error.message }));
+        .catch(error => res.status(400).json({ error }));
         })
-    .catch(error => res.status(500).json({ message: error.message }));
+    .catch(error => res.status(500).json({ error }));
 };
 
 exports.login = (req, res, next) => {
@@ -74,21 +74,21 @@ exports.login = (req, res, next) => {
             token: jwt.sign(
               { userId: user.id },
               process.env.SECRET_TOKEN,
-              { expiresIn: '24h' }
+              { expiresIn: '30d' }
             )
           });
         })
-        .catch(error => res.status(500).json({ message: error.message }));
+        .catch(error => res.status(500).json({ error }));
     })
     .catch(error => {
-      return res.status(500).json({ message: error.message });
+      return res.status(500).json({ error });
     });
 };
 
 exports.getProfile = (req, res, next) => {
   User.findOne({ where: { id: getUserDecodedToken(req) } })
     .then(user => res.status(200).json(user))
-    .catch(error => res.status(404).json({ message: error.message }));
+    .catch(error => res.status(404).json({ error }));
 };
 
 exports.updateProfile = (req, res, next) => {
@@ -111,14 +111,14 @@ exports.updateProfile = (req, res, next) => {
           },
           { where: { id: getUserDecodedToken(req) }})
           .then(() => res.status(200).json({ message: 'Profile updated successfully !'}))
-          .catch(error => res.status(400).json({ message: error.message }));
+          .catch(error => res.status(400).json({ error }));
       })
   } else {
       User.update(
         { ...req.body },
         { where: { id: getUserDecodedToken(req) }})
         .then(() => res.status(200).json({ message: 'Profile updated successfully !'}))
-        .catch(error => res.status(400).json({ message: error.message }));
+        .catch(error => res.status(400).json({ error }));
   }
 };
 
@@ -129,8 +129,8 @@ exports.deleteProfile = (req, res, next) => {
       // fs.unlink(`images/${filename}`, () => {
         User.destroy({ where: { id: getUserDecodedToken(req) } })
           .then(() => res.status(200).json({ message: 'Profile deleted successfully !'}))
-          .catch(error => res.status(400).json({ message: error.message }));
+          .catch(error => res.status(400).json({ error }));
       // });
     })
-    .catch(error => res.status(500).json({ message: error.message }));
+    .catch(error => res.status(500).json({ error }));
 };

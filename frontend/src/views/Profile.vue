@@ -124,7 +124,7 @@
             console.log(response)
             localStorage.clear()
           })
-          .then(this.$router.push('/'))
+          .then(this.$router.push('/accueil'))
           .catch(error => console.error(error.response))
       }
     },
@@ -145,5 +145,5 @@
   }
 </script>
 
-<style lang="css" scoped>
+<style lang="scss" scoped>
 </style>

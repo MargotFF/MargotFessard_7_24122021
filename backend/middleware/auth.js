@@ -1,4 +1,4 @@
-const { getUserDecodedToken } = require('./utils');
+const { getUserDecodedToken } = require('../utils/index');
 
 module.exports = (req, res, next) => {
   try {

@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {
-    path: '/',
+    path: '/accueil',
     name: 'Home',
     component: () => import('../views/Home.vue')
   },
@@ -44,7 +44,7 @@ router.beforeEach((to, from, next) => {
   const user = JSON.parse(localStorage.getItem('groupomania:user'))
   const token = localStorage.getItem('groupomania:token')
   if (requiresAuth && (!user || !token)) {
-    return next('/')
+    return next('/accueil')
   }
   next()
 })
