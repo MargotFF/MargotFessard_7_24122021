@@ -26,10 +26,4 @@ const Post = sequelize.define('post', {
   }
 });
 
-// Post.associate = function(models) {
-//   Post.belongsTo(models.User, {
-//     foreignKey: 'userId',
-//   })
-// };
-
 module.exports = Post;

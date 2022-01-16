@@ -1,20 +1,26 @@
 <template>
   <div class="container">
-    <Navbar></Navbar>
+    <Navbar/>
     <div v-show="!showForm">
-      <h1>Mon profil Groupomania</h1>
-      <h2>Bienvenue {{ user.firstName }} {{ user.lastName }} !</h2>
-      <img src="../assets/default-avatar.jpeg" alt="avatar">
-      <p>Pseudo : {{ user.userName }}</p>
-      <p>Poste actuel : {{ user.jobTitle }}</p>
-      <p>Email : {{ user.email }}</p>
+      <img src="../assets/icon.png" alt="Logo Groupomania" class="logo-icon">
+      <div class="profile">
+        <img v-if="user.avatar !== null" :src="user.avatar" alt="avatar">
+        <img v-else src="../assets/default-avatar.jpeg" alt="avatar par défaut">
+        <h2>Mon profil Groupomania</h2>
+        <p>Prénom : {{ user.firstName }}</p>
+        <p>Nom : {{ user.lastName }}</p>
+        <p>Pseudo : {{ user.userName }}</p>
+        <p>Poste actuel : {{ user.jobTitle }}</p>
+        <p>Email : {{ user.email }}</p>
+      </div>
     </div>
     <div v-show="showForm">
-    <h1>Mes informations</h1>
+      <h1>Mes informations</h1>
       <div class="form-group">
-          <label for="avatar">Photo de profil</label>
-          <input type="file" accept="image/png, image/jpg, image/jpeg" id="avatar" class="form-control">
-      </div>
+      <button @click="uploadFile" type="button" class="btn-invisible"></button>
+      <label for="avatar">Photo de profil</label>
+      <input type="file" ref="fileUpload" @change="onFileSelected" accept="image/*" id="avatar" class="form-control">
+    </div>
       <div class="form-group">
         <label for="firstName">Prénom</label>
         <input type="text" id="firstName" class="form-control" v-model="user.firstName" required>
@@ -49,12 +55,14 @@
 <script>
   import Navbar from '../components/Navbar.vue'
   import axios from 'axios'
+
   export default {
     name: 'Profile',
     components: { Navbar },
     data() {
       return {
         user: {},
+        avatar: '',
         showForm: false
       }
     },
@@ -75,38 +83,37 @@
       displayForm() {
         this.showForm = !this.showForm
       },
+      uploadFile() {
+        this.$refs.fileUpload.click()
+      },
+      onFileSelected(event) {
+        this.avatar = event.target.files[0];
+      },
       updateProfile() {
         const newPassword = document.getElementById('newPassword').value;
-        let data;
 
-        if (newPassword === "") {
-          data = {
-            firstName: this.user.firstName,
-            lastName: this.user.lastName,
-            userName: this.user.userName,
-            jobTitle: this.user.jobTitle,
-            email: this.user.email
-          };
-        } else {
-          data = {
-            firstName: this.user.firstName,
-            lastName: this.user.lastName,
-            userName: this.user.userName,
-            jobTitle: this.user.jobTitle,
-            email: this.user.email,
-            newPassword: newPassword
-          };
+        const formData = new FormData();
+        if (newPassword !== '') {
+          formData.append("newPassword", newPassword)
         }
+        if (this.avatar) {
+          formData.append("imageUrl", this.avatar);
+        }
+        formData.append("firstName", this.user.firstName);
+        formData.append("lastName", this.user.lastName);
+        formData.append("userName", this.user.userName);
+        formData.append("jobTitle", this.user.jobTitle);
+        formData.append("email", this.user.email);
 
-        const token = JSON.parse(localStorage.getItem('groupomania:token'));
-        axios.put('http://localhost:3000/api/auth/profile', data,
-          {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
+        const token = JSON.parse(localStorage.getItem('groupomania:token'))
+        axios.put(`http://localhost:3000/api/auth/profile`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': `Bearer ${token}`
+          }
         })
           .then(response => {
-            console.log(response.data)
+            console.log(response)
             this.user = response.data
             this.getProfile()
             this.showForm = false
@@ -130,20 +137,22 @@
     },
     mounted() {
       this.getProfile()
-      // const token = JSON.parse(localStorage.getItem('groupomania:token'))
-      // axios.get('http://localhost:3000/api/auth/profile', {
-      //   headers: {
-      //     'Authorization': `Bearer ${token}`
-      //   }
-      // })
-      //   .then(response => {
-      //     console.log(response.data)
-      //     this.user = response.data
-      //   })
-      //   .catch(error => console.error(error.response));
     }
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+  .logo-icon {
+    width: 10%;
+  }
+  .btn-invisible {
+    display: flex;
+    align-items: center;
+    color: #3f3d56;
+    border: none;
+    background-color: transparent;
+    &:hover, &:focus {
+        color: white;
+    }
+  }
 </style>

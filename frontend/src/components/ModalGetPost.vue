@@ -12,7 +12,14 @@
           <div class="modal-body">
             <div name="body">
               {{ post.message }}
-              {{ post.imageUrl }}
+              <img v-show="post.imageUrl" :src="post.imageUrl" alt="Image publiée">
+            </div>
+            <div class="comments" v-for="comment in comments" :key="comment.id">
+              <Comment :comment="comment"/>
+              <button v-show="canDelete(comment.user.id)" @click="onDelete(comment.id)">Supprimer</button>
+            </div>
+            <div>
+              <FormCreateComment @commentCreated="onCommentCreated"/>
             </div>
           </div>
           <div class="modal-footer">
@@ -27,15 +34,29 @@
 </template>
 
 <script>
-import { dateFormat } from '../utils/index'
+import Comment from '../components/Comment.vue'
+import FormCreateComment from '../components/FormCreateComment.vue'
+import { dateFormat, canDelete } from '../utils/index'
 
 export default {
   name: 'ModalGetPost',
+  components: {
+    Comment,
+    FormCreateComment
+  },
   props: {
-    post: Object
+    post: Object,
+    comments: Array
   },
   methods: {
-    dateFormat
+    dateFormat,
+    canDelete,
+    onDelete(id) {
+      this.$emit('commentDeleted', id)
+    },
+    onCommentCreated(params) {
+      this.$emit('commentCreated', params)
+    }
   }
 }
 </script>

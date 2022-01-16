@@ -1,12 +1,12 @@
 <template>
   <div class="container">
-    <Navbar></Navbar>
+    <Navbar/>
     <div>
-      <h1>Mon Groupomania</h1>
+      <img src="../assets/icon-left-font.png" alt="Logo Groupomania" class="red-logo-left">
       <h2>Un nouveau gif à partager ?</h2>
       <div class="new-post">
         <iframe src="https://giphy.com/embed/fM2As3ApmcwggaYWXG" width="150" height="150" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
-        <FormCreatePost @created="createPost"></FormCreatePost>
+        <FormCreatePost @postCreated="createPost"/>
       </div>
     </div>
     <div>
@@ -17,14 +17,23 @@
         <p>{{ post.message }}</p>
         <img :src="post.imageUrl" alt="">
         <p>Publié le {{ dateFormat(post.createdAt) }}</p>
-        <div class="comments" v-for="comment in comments" :key="comment.id">
-          <Comments :comment="comment"></Comments>
-        </div>
+        <p v-if="post.countComments <= 1">{{ post.countComments }} commentaire</p>
+        <p v-else>{{ post.countComments }} commentaires</p>
         <button @click="displayOnePost(post.id)">Voir</button>
-        <ModalGetPost v-if="showModalGetOne" @close="showModalGetOne = false" :post="onePost"></ModalGetPost>
-        <button @click="displayUpdatedPost(post.id)">Modifier</button>
-        <ModalUpdatePost v-if="showModalUpdate" @close="showModalUpdate = false" :post="onePost"></ModalUpdatePost>
-        <button @click="deletePost(post.id)">Supprimer</button>
+        <ModalGetPost 
+          v-if="showModalGetOne"
+          @commentCreated="createComment"
+          @commentDeleted="deleteComment"
+          @close="closeOnePost" 
+          :post="onePost" 
+          :comments="comments"/>
+        <button v-show="canUpdate(post.user.id)" @click="displayUpdatedPost(post.id)">Modifier</button>
+        <ModalUpdatePost 
+          v-if="showModalUpdate" 
+          @postUpdated="updatePost" 
+          @close="showModalUpdate = false" 
+          :post="onePost"/>
+        <button v-show="canDelete(post.user.id)" @click="deletePost(post.id)">Supprimer</button>
        </div>
     </div>
   </div>
@@ -35,8 +44,7 @@
   import FormCreatePost from '../components/FormCreatePost.vue'
   import ModalGetPost from '../components/ModalGetPost.vue'
   import ModalUpdatePost from '../components/ModalUpdatePost.vue'
-  import Comments from '../components/Comments.vue'
-  import { dateFormat } from '../utils/index'
+  import { dateFormat, canUpdate, canDelete } from '../utils/index'
   import axios from 'axios'
 
   export default {
@@ -45,8 +53,7 @@
       Navbar,
       FormCreatePost,
       ModalGetPost,
-      ModalUpdatePost,
-      Comments
+      ModalUpdatePost
     },
     data() {
       return {
@@ -55,7 +62,6 @@
         showModalGetOne: false,
         showModalUpdate: false,
         comments: [],
-        comment: {}
       }
     },
     methods: {
@@ -109,17 +115,29 @@
       displayOnePost(id) {
         this.showModalGetOne = true
         this.getOnePost(id)
+        this.getComments(id)
       },
-      updatePost(id) {
+      closeOnePost() {
+        this.showModalGetOne = false
+        this.getPosts()
+      },
+      canUpdate,
+      updatePost({id, params}) {
+        const formData = new FormData();
+        formData.append("message", params.message);
+        formData.append("imageUrl", params.imageUrl);
+
         const token = JSON.parse(localStorage.getItem('groupomania:token'))
-        axios.put(`http://localhost:3000/api/posts/${id}`, {
+        axios.put(`http://localhost:3000/api/posts/${id}`, formData, {
           headers: {
+            'Content-Type': 'multipart/form-data',
             'Authorization': `Bearer ${token}`
           }
         })
           .then(response => {
             console.log(response)
             this.onePost = response.data
+            this.getPosts()
           })
           .catch(error => console.error(error.response))
       },
@@ -127,6 +145,7 @@
         this.showModalUpdate = true
         this.getOnePost(id)
       },
+      canDelete,
       deletePost(id) {
         const token = JSON.parse(localStorage.getItem('groupomania:token'))
         axios.delete(`http://localhost:3000/api/posts/${id}`, {
@@ -154,9 +173,42 @@
           })
           .catch(error => console.error(error.response))
       },
+      createComment(params) {
+        const token = JSON.parse(localStorage.getItem('groupomania:token'))
+
+        axios.post('http://localhost:3000/api/comments', { ...params, postId: this.onePost.id }, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        })
+          .then((response) => {
+            console.log(response.data)
+            this.getComments(this.onePost.id)
+          })
+          .catch(error => console.error(error.response))
+      },
+      deleteComment(id) {
+        const token = JSON.parse(localStorage.getItem('groupomania:token'))
+        axios.delete(`http://localhost:3000/api/comments/${id}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        })
+          .then(response => {
+            console.log(response)
+            this.getComments(this.onePost.id)
+          })
+          .catch(error => console.error(error.response))
+      }
     },
     mounted() {
       this.getPosts()
     }
   }
 </script>
+
+<style lang="scss">
+  .red-logo-left {
+    width: 60%;
+  }
+</style>

@@ -10,3 +10,24 @@ export function logout() {
 export function dateFormat(date) {
   return moment(new Date(date)).format('DD/MM/YYYY à HH:mm');
 }
+
+export function isAdmin() {
+  const isAdmin = localStorage.getItem('groupomania:admin');
+  return isAdmin === Boolean(isAdmin);
+}
+
+export function getLoggedUserId() {
+  const user = JSON.parse(localStorage.getItem('groupomania:user'));
+  const userId = user.userId;
+  return userId;
+}
+
+export function canUpdate(entityAuthorId) {
+  const userId = getLoggedUserId();
+  return entityAuthorId === userId;
+}
+
+export function canDelete(entityAuthorId) {
+  const userId = getLoggedUserId();
+  return entityAuthorId === userId || isAdmin();
+}

@@ -10,7 +10,7 @@
 import { dateFormat } from '../utils/index'
 
 export default {
-  name: 'Comments',
+  name: 'Comment',
   props: {
     comment: Object
   },

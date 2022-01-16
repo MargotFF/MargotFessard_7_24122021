@@ -36,21 +36,21 @@
           message: this.message,
           imageUrl: this.imageUrl
         }
-        this.$emit('created', params)
+        this.$emit('postCreated', params)
       }
     }
   }
 </script>
 
 <style lang="scss">
-.btn-invisible {
-  display: flex;
-  align-items: center;
-  color: #3f3d56;
-  border: none;
-  background-color: transparent;
-  &:hover, &:focus {
-      color: white;
+  .btn-invisible {
+    display: flex;
+    align-items: center;
+    color: #3f3d56;
+    border: none;
+    background-color: transparent;
+    &:hover, &:focus {
+        color: white;
+    }
   }
-}
 </style>

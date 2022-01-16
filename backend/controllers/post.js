@@ -1,17 +1,24 @@
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
+const sequelize = require('sequelize');
 
 const Post = require('../models/post');
-const { User } = require('../models/index');
+const { User, Comment } = require('../models/index');
 const { getUserDecodedToken } = require('../utils/index');
 
 exports.getAllPosts = (req, res, next) => {
   Post.findAll({
+    attributes: ['id', 'message', 'imageUrl', 'createdAt', 'updatedAt', [sequelize.fn('COUNT', sequelize.col('comments.id')), 'countComments']],
     include: [{
       model: User,
       attributes: ['id', 'userName', 'avatar']
+    },
+    {
+      model: Comment,
+      attributes: []
     }],
-    order: [['createdAt', 'DESC']]
+    order: [['createdAt', 'DESC']],
+    group: ['id']
   })
     .then(posts => res.status(200).json(posts))
     .catch(error => res.status(404).json({ error }));
@@ -65,9 +72,9 @@ exports.updatePost = (req, res, next) => {
             .catch(error => res.status(400).json({ error }));
         })
       } else {
-          Post.update({ ...postObject }, { where: { id: req.params.id } })
-            .then(() => res.status(200).json({ message: 'Post updated successfully !'}))
-            .catch(error => res.status(400).json({ error }));
+        Post.update({ ...postObject }, { where: { id: req.params.id } })
+          .then(() => res.status(200).json({ message: 'Post updated successfully !'}))
+          .catch(error => res.status(400).json({ error }));
       }
     })
     .catch(error => res.status(500).json({ error }));

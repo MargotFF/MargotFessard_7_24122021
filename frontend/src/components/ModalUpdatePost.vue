@@ -14,7 +14,7 @@
                 <div class="form-group">
                   <i class="far fa-comment-dots"></i>
                   <label for="message"></label>
-                  <input type="text" id="message" class="form-control" v-model="message" placeholder="Mon message" required>
+                  <input type="text" id="message" class="form-control" v-model="postUpdate.message" required>
                 </div>
                 <div class="form-group">
                   <button @click="uploadFile" type="button" class="btn-invisible"></button>
@@ -22,7 +22,7 @@
                   <label for="imageUrl"></label>
                   <input type="file" ref="fileUpload" @change="onFileSelected" accept="image/*" id="imageUrl" class="form-control">
                 </div>
-                <button @click.prevent="onSubmit">Modifier</button>
+                <button @click.prevent="onSubmit">Mettre à jour</button>
               </div>
             </div>
           </div>
@@ -43,19 +43,32 @@
     props: {
     post: Object
     },
+    watch: {
+      post: function (newValue) {
+        if (newValue.id) {
+          this.postUpdate.message = newValue.message
+        }
+      }
+    },
+    data() {
+      return {
+        postUpdate: {},
+        image: null
+      }
+    },
     methods: {
       uploadFile() {
         this.$refs.fileUpload.click()
       },
       onFileSelected(event) {
-        this.imageUrl = event.target.files[0];
+        this.image = event.target.files[0];
       },
       onSubmit() {
         const params = {
-          message: this.message,
-          imageUrl: this.imageUrl
+          message: this.postUpdate.message,
+          imageUrl: this.image
         }
-        this.$emit('updated', params)
+        this.$emit('postUpdated', {params, id: this.post.id})
       }
     }
   }

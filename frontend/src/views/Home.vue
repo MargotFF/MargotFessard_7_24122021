@@ -2,8 +2,8 @@
   <section class="hero is-dark">
     <div class="hero-body">
       <div class="container">
-        <h1 class="title">Groupomania</h1>
-        <h2 class="subtitle">Le réseau social des employés fait par des employés &#128155;</h2>
+        <img src="../assets/icon-above-font.png" alt="Logo Groupomania" class="red-logo-above">
+        <h2 class="subtitle">Le réseau social des employés fait par des employés</h2>
         <button><router-link to="/inscription">Je m'inscris</router-link></button>
         <button><router-link to="/connexion">Je me connecte</router-link></button>
       </div>
@@ -27,5 +27,8 @@
   }
   .subtitle {
     font-size: 30px;
+  }
+  .red-logo-above {
+    width: 60%;
   }
 </style>

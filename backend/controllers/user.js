@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const passwordValidator = require('password-validator');
 const emailValidator = require('email-validator');
 const {Op} = require('sequelize');
+const fs = require('fs');
 
 require('dotenv').config({ path: '../.env'});
 
@@ -43,7 +44,6 @@ exports.signup = (req, res, next) => {
         jobTitle: req.body.jobTitle,
         email: req.body.email,
         password: hash,
-        // avatar: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null,
       })
         .then(() => res.status(201).json({ message: 'User created !' }))
         .catch(error => res.status(400).json({ error }));
@@ -92,45 +92,57 @@ exports.getProfile = (req, res, next) => {
 };
 
 exports.updateProfile = (req, res, next) => {
-  // const userObject = req.file ?
-  //   {
-  //     ...JSON.parse(req.body.user),
-  //     avatar: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-  //   } : { ...req.body };
   const newPassword = req.body.newPassword;
+  let userObject = {
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    userName: req.body.userName,
+    jobTitle: req.body.jobTitle,
+    email: req.body.email
+  }
   if (newPassword) {
     bcrypt.hash(newPassword, 10)
-      .then(hash => {
-        User.update({
-          firstName: req.body.firstName,
-          lastName: req.body.lastName,
-          userName: req.body.userName,
-          jobTitle: req.body.jobTitle,
-          email: req.body.email,
-          password: hash,
-          },
-          { where: { id: getUserDecodedToken(req) }})
+      .then(hash => { 
+        userObject.password = hash
+      })
+  }
+  if (req.file) {
+    userObject = {
+      ...userObject,
+      avatar: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+    }   
+  }
+  User.findOne({ where: { id: getUserDecodedToken(req) } })
+    .then((user) => {
+      if (user.avatar != null) {
+        const filename = user.avatar.split('/images/')[1];
+        fs.unlink(`images/${filename}`, () => {
+          User.update(userObject, { where: { id: getUserDecodedToken(req) } })
+            .then(() => res.status(200).json({ message: 'Profile updated successfully !'}))
+            .catch(error => res.status(400).json({ error }));
+        })
+      } else {
+        User.update(userObject, { where: { id: getUserDecodedToken(req) } })
           .then(() => res.status(200).json({ message: 'Profile updated successfully !'}))
           .catch(error => res.status(400).json({ error }));
-      })
-  } else {
-      User.update(
-        { ...req.body },
-        { where: { id: getUserDecodedToken(req) }})
-        .then(() => res.status(200).json({ message: 'Profile updated successfully !'}))
-        .catch(error => res.status(400).json({ error }));
-  }
-};
+      }
+    })
+    .catch(error => res.status(500).json({ error }));
+
+  // User.update(userObject, { where: { id: getUserDecodedToken(req) }})
+  //   .then(() => res.status(200).json({ message: 'Profile updated successfully !'}))
+  //   .catch(error => res.status(400).json({ error }));  
+}
 
 exports.deleteProfile = (req, res, next) => {
   User.findOne({ where: { id: getUserDecodedToken(req) } })
     .then(user => {
-      // const filename = user.avatar.split('/images/')[1];
-      // fs.unlink(`images/${filename}`, () => {
+      const filename = user.avatar.split('/images/')[1];
+      fs.unlink(`images/${filename}`, () => {
         User.destroy({ where: { id: getUserDecodedToken(req) } })
           .then(() => res.status(200).json({ message: 'Profile deleted successfully !'}))
           .catch(error => res.status(400).json({ error }));
-      // });
+      });
     })
     .catch(error => res.status(500).json({ error }));
 };
