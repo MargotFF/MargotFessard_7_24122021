@@ -1,54 +1,56 @@
 <template>
-  <div class="container">
+  <div class="profile">
     <Navbar/>
     <div v-show="!showForm">
-      <img src="../assets/icon.png" alt="Logo Groupomania" class="logo-icon">
-      <div class="profile">
-        <img v-if="user.avatar !== null" :src="user.avatar" alt="avatar">
-        <img v-else src="../assets/default-avatar.jpeg" alt="avatar par défaut">
-        <h2>Mon profil Groupomania</h2>
-        <p>Prénom : {{ user.firstName }}</p>
-        <p>Nom : {{ user.lastName }}</p>
-        <p>Pseudo : {{ user.userName }}</p>
-        <p>Poste actuel : {{ user.jobTitle }}</p>
-        <p>Email : {{ user.email }}</p>
+      <img class="logo-icon-width" src="../assets/icon.png" alt="Logo Groupomania">
+      <h1>Mon profil <span class="red-word">Groupomania</span></h1>
+      <div class="profile-data font-size-medium">
+        <img v-if="user.avatar !== null" :src="user.avatar" alt="Photo de profil" class="avatar profile-avatar">
+        <img v-else src="../assets/default-avatar.jpeg" alt="Photo de profil par défaut" class="avatar profile-avatar">
+        <p><span class="bold-text">Prénom : </span>{{ user.firstName }}</p>
+        <p><span class="bold-text">Nom : </span>{{ user.lastName }}</p>
+        <p><span class="bold-text">Pseudo : </span>{{ user.userName }}</p>
+        <p><span class="bold-text">Poste actuel : </span>{{ user.jobTitle }}</p>
+        <p><span class="bold-text">Email : </span>{{ user.email }}</p>
       </div>
     </div>
     <div v-show="showForm">
       <h1>Mes informations</h1>
-      <div class="form-group">
-      <button @click="uploadFile" type="button" class="btn-invisible"></button>
-      <label for="avatar">Photo de profil</label>
-      <input type="file" ref="fileUpload" @change="onFileSelected" accept="image/*" id="avatar" class="form-control">
+      <div class="form-container">
+        <div class="form-group image-upload-profile">
+          <label for="avatar" class="bold-text">Photo de profil</label>
+          <input type="file" ref="fileUpload" @change="onFileSelected" accept="image/*" id="avatar" class="form-control">
+          <button @click="uploadFile" type="button" class="btn-invisible btn-invisible-top"></button>
+        </div>
+        <div class="form-group">
+          <label for="firstName" class="bold-text">Prénom</label>
+          <input type="text" id="firstName" class="form-control" v-model="user.firstName" required>
+        </div>
+        <div class="form-group">
+          <label for="lastName" class="bold-text">Nom de famille</label>
+          <input type="text" id="lastName" class="form-control" v-model="user.lastName" required>
+        </div>
+        <div class="form-group">
+          <label for="userName" class="bold-text">Pseudo</label>
+          <input type="text" id="userName" class="form-control" v-model="user.userName" required>
+        </div>
+        <div class="form-group">
+          <label for="jobTitle" class="bold-text">Poste actuel</label>
+          <input type="text" id="jobTitle" class="form-control" v-model="user.jobTitle" required>
+        </div>
+        <div class="form-group">
+          <label for="email" class="bold-text">Email</label>
+          <input type="text" id="email" class="form-control" v-model="user.email" required>
+        </div>
+        <div class="form-group">
+          <label for="newPassword" class="bold-text">Nouveau mot de passe</label>
+          <input type="password" id="newPassword" class="form-control" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$">
+        </div>
+      </div>
     </div>
-      <div class="form-group">
-        <label for="firstName">Prénom</label>
-        <input type="text" id="firstName" class="form-control" v-model="user.firstName" required>
-      </div>
-      <div class="form-group">
-        <label for="lastName">Nom de famille</label>
-        <input type="text" id="lastName" class="form-control" v-model="user.lastName" required>
-      </div>
-      <div class="form-group">
-        <label for="userName">Pseudo</label>
-        <input type="text" id="userName" class="form-control" v-model="user.userName" required>
-      </div>
-      <div class="form-group">
-        <label for="jobTitle">Poste actuel</label>
-        <input type="text" id="jobTitle" class="form-control" v-model="user.jobTitle" required>
-      </div>
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input type="text" id="email" class="form-control" v-model="user.email" required>
-      </div>
-      <div class="form-group">
-        <label for="newPassword">Nouveau mot de passe</label>
-        <input type="password" id="newPassword" class="form-control" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$">
-      </div>
-    </div>
-    <button @click="displayForm()">{{ showForm ? "Annuler les modifications" : "Modifier mon profil" }}</button>
-    <button v-show="showForm" @click="updateProfile()">Mettre à jour mon profil</button>
-    <button v-show="!showForm" @click="deleteProfile()">Supprimer mon compte</button>
+    <button id="btn-cancel-responsive" class="btn-margin-right-lg" @click="displayForm()">{{ showForm ? "Annuler les modifications" : "Modifier mon profil" }}</button>
+    <button id="btn-update-responsive" class="btn-margin" v-show="showForm" @click="updateProfile()">Mettre à jour mon profil</button>
+    <button class="btn-margin" v-show="!showForm" @click="deleteProfile()">Supprimer mon compte</button>
   </div>
 </template>
 
@@ -142,17 +144,31 @@
 </script>
 
 <style lang="scss">
-  .logo-icon {
-    width: 10%;
+  .profile-data {
+    margin: 30px 0;
   }
-  .btn-invisible {
-    display: flex;
-    align-items: center;
-    color: #3f3d56;
-    border: none;
-    background-color: transparent;
-    &:hover, &:focus {
-        color: white;
+  .profile-avatar {
+    width: 15em;
+    height: 15em;
+    border: white 3px solid;
+  }
+  .image-upload-profile > input[type=file] {
+    margin-top: 8px;
+  }
+  .btn-invisible-profile {
+    top: 256px;
+  }
+  @media (max-width: 530px) {
+    .profile-avatar {
+      width: 10em;
+      height: 10em;
+      border: white 3px solid;
+    }
+    #btn-cancel-responsive{
+      margin: 20px 0 0 0 !important;
+    }
+    #btn-update-responsive{
+      margin: 20px 0 20px 0 !important;
     }
   }
 </style>

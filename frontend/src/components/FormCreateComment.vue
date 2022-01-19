@@ -1,10 +1,10 @@
 <template>
-  <div class="post-form">
-    <div class="form-group">
+  <div class="comment-form">
+    <div class="form-group full-width">
       <label for="content"></label>
-      <input type="text" id="content" class="form-control" v-model="content" placeholder="Mon commentaire" required>
+      <input type="text" id="content" class="form-control" v-model="content" placeholder="Votre commentaire..." required>
     </div>
-    <button @click.prevent="onSubmit">Envoyer</button>
+    <button class="comment-form-btn" @click.prevent="onSubmit">Envoyer</button>
 </div>
 </template>
 
@@ -28,14 +28,24 @@
 </script>
 
 <style lang="scss">
-.btn-invisible {
-  display: flex;
-  align-items: center;
-  color: #3f3d56;
-  border: none;
-  background-color: transparent;
-  &:hover, &:focus {
-      color: white;
+  .comment-form {
+    display: flex;
+    .form-group {
+      .form-control {
+        width: 100%;
+        border: 1px solid #e3e3e3;
+        padding: 10px;
+      }
+    }
+    &-btn {
+      border-radius: 0;
+      padding: 0;
+      margin: 0;
+      padding: 0 15px;
+      font-size: 13px;
+      &:hover {
+        background-color: white;
+      }
+    }
   }
-}
 </style>

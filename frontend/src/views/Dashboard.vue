@@ -2,39 +2,40 @@
   <div class="container">
     <Navbar/>
     <div>
-      <img src="../assets/icon-left-font.png" alt="Logo Groupomania" class="red-logo-left">
-      <h2>Un nouveau gif à partager ?</h2>
-      <div class="new-post">
-        <iframe src="https://giphy.com/embed/fM2As3ApmcwggaYWXG" width="150" height="150" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
-        <FormCreatePost @postCreated="createPost"/>
-      </div>
+      <img class="logo-icon-width" src="../assets/icon.png" alt="Logo Groupomania">
+      <h1>Mon <span class="red-word">feed</span> de publications</h1>
     </div>
-    <div>
-      <h2>Mon feed de publications</h2>
-       <i class="fas fa-users"></i>
-       <div v-for="post in posts" :key="post.id">
-        <p>{{ post.user.userName }}</p>
-        <p>{{ post.message }}</p>
-        <img :src="post.imageUrl" alt="">
-        <p>Publié le {{ dateFormat(post.createdAt) }}</p>
-        <p v-if="post.countComments <= 1">{{ post.countComments }} commentaire</p>
-        <p v-else>{{ post.countComments }} commentaires</p>
-        <button @click="displayOnePost(post.id)">Voir</button>
-        <ModalGetPost 
-          v-if="showModalGetOne"
-          @commentCreated="createComment"
-          @commentDeleted="deleteComment"
-          @close="closeOnePost" 
-          :post="onePost" 
-          :comments="comments"/>
-        <button v-show="canUpdate(post.user.id)" @click="displayUpdatedPost(post.id)">Modifier</button>
-        <ModalUpdatePost 
-          v-if="showModalUpdate" 
-          @postUpdated="updatePost" 
-          @close="showModalUpdate = false" 
-          :post="onePost"/>
-        <button v-show="canDelete(post.user.id)" @click="deletePost(post.id)">Supprimer</button>
-       </div>
+    <FormCreatePost @postCreated="createPost"/>
+    <i class="fas fa-users"></i>
+    <div class="posts-list">
+      <div v-for="post in posts" :key="post.id" class="post-card">
+        <div>
+          <img v-if="post.user.avatar" :src="post.user.avatar" alt="Photo de profil" class="avatar post-avatar">
+          <img v-else src="../assets/default-avatar.jpeg" alt="Photo de profil par défaut" class="avatar post-avatar">
+        </div> 
+        <div class="post-content">
+          <p class="bold-text font-size-medium post-content-top">{{ post.user.userName }}<span class="post-content-date">le {{ dateFormat(post.createdAt) }}</span></p>
+          <p class="post-content-message font-size-medium">{{ post.message }}</p>
+          <img v-show="post.imageUrl" :src="post.imageUrl" alt="Image publiée" class="post-content-img">
+          <p v-if="post.countComments <= 1" class="post-content-bottom">{{ post.countComments }} commentaire</p>
+          <p v-else class="post-content-bottom">{{ post.countComments }} commentaires</p>
+          <button @click="displayOnePost(post.id)" class="btn-margin-right-sm">Voir</button>
+          <ModalGetPost 
+            v-if="showModalGetOne"
+            @commentCreated="createComment"
+            @commentDeleted="deleteComment"
+            @close="closeOnePost" 
+            :post="onePost" 
+            :comments="comments"/>
+          <button v-show="canUpdate(post.user.id)" @click="displayUpdatedPost(post.id)" class="btn-margin-right-sm">Modifier</button>
+          <ModalUpdatePost 
+            v-if="showModalUpdate" 
+            @postUpdated="updatePost" 
+            @close="showModalUpdate = false" 
+            :post="onePost"/>
+          <button v-show="canDelete(post.user.id)" @click="deletePost(post.id)">Supprimer</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -208,7 +209,81 @@
 </script>
 
 <style lang="scss">
-  .red-logo-left {
-    width: 60%;
+  .fa-users {
+    margin: 40px 0;
+    font-size: 25px;
+  }
+  .posts-list {
+    margin-bottom: 50px;
+  }
+  .post-card {
+    display: flex;
+    justify-content: center;
+    .post-avatar {
+      width: 50px;
+      height: 50px;
+      border: white 1px solid;
+      margin-right: 30px;
+      margin-top: 18px;
+    }
+    .post-content {
+      width: 80%;
+      margin-left: 20px;
+      margin-bottom: 20px;
+      padding: 20px 25px;
+      background-color: #F7F7F7;
+      border: 1px solid #e3e3e3;
+      position: relative;
+      text-align: left;
+      &-top {
+        margin-top: 12px;
+      }
+      &-date {
+        font-size: 14px;
+        font-weight: 400;
+        padding-left: 10px;
+      }
+      &-message {
+        border-left: 5px solid #eaeaea;
+        padding-left: 10px;     
+      }
+      &-img {
+        width: 25%;
+      }
+      &-bottom {
+        margin-bottom: 20px; 
+        padding: 5px 10px;
+        font-size: 14px;
+        border-radius: 3px;
+        border: 1px solid #C5C5C5;
+        width: fit-content;
+      }
+    }
+    .post-content::before {
+      content: " ";
+      position: absolute;
+      top: 24px;
+      left: -21px;
+      border-top: 20px solid transparent;
+      border-bottom: 20px solid transparent;
+      border-right: 20px solid #e6e6e6;
+      border-right-color: #e3e3e3;
+    }
+    .post-content::after {
+      content: " ";
+      position: absolute;
+      top: 25px;
+      left: -19px;
+      border-top: 19px solid transparent;
+      border-bottom: 19px solid transparent;
+      border-right: 19px solid #fff;
+      border-right-color: #F7F7F7;
+    }
+  }
+  @media (max-width: 768px) {
+    .post-content {
+      width: 70% !important;
+      margin-right: 10px;
+    }
   }
 </style>

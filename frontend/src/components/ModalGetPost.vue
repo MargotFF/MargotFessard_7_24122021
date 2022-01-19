@@ -4,28 +4,28 @@
       <div class="modal-wrapper">
         <div class="modal-container">
           <div class="modal-header">
-            <div name="header">
-              {{ post.user?.userName }} 
-              {{ dateFormat(post.createdAt) }}
-            </div>
+              <img v-if="post.user?.avatar" :src="post.user?.avatar" alt="Photo de profil" class="avatar modal-header-avatar">
+              <img v-else src="../assets/default-avatar.jpeg" alt="Photo de profil par défaut" class="avatar modal-header-avatar">
+              <p class="bold-text font-size-medium">{{ post.user?.userName }} </p>
+              <p class="post-content-date">le {{ dateFormat(post.createdAt) }}</p>
           </div>
           <div class="modal-body">
-            <div name="body">
-              {{ post.message }}
-              <img v-show="post.imageUrl" :src="post.imageUrl" alt="Image publiée">
+            <div class="modal-post-body">
+              <p class="post-content-message font-size-medium">{{ post.message }}</p>
+              <img v-show="post.imageUrl" :src="post.imageUrl" alt="Image publiée" class="modal-post-img">
             </div>
+            <div class="delimiter"></div>
+            <h2 class="font-size-medium">Commentaires</h2>
             <div class="comments" v-for="comment in comments" :key="comment.id">
               <Comment :comment="comment"/>
-              <button v-show="canDelete(comment.user.id)" @click="onDelete(comment.id)">Supprimer</button>
+              <button v-show="canDelete(comment.user.id)" @click="onDelete(comment.id)" class="icon-btn"><i class="fas fa-trash-alt"></i></button>
             </div>
             <div>
               <FormCreateComment @commentCreated="onCommentCreated"/>
             </div>
           </div>
           <div class="modal-footer">
-            <div name="footer">
-              <button class="modal-default-button" @click="$emit('close')">Fermer</button>
-            </div>
+            <button @click="$emit('close')">Fermer</button>
           </div>
         </div>
       </div>
@@ -69,7 +69,7 @@ export default {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.2);
     display: table;
     transition: opacity 0.3s ease;
   }
@@ -78,24 +78,58 @@ export default {
     vertical-align: middle;
   }
   .modal-container {
-    width: 300px;
+    width: 70%;
+    // max-height: 90%;
+    height: calc(100vh - 10%);
+    overflow-y: auto;
     margin: 0px auto;
     padding: 20px 30px;
     background-color: #fff;
     border-radius: 2px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
     transition: all 0.3s ease;
-    font-family: Helvetica, Arial, sans-serif;
   }
-  .modal-header h3 {
-    margin-top: 0;
-    color: #42b983;
+  .modal-header {
+    display: flex;
+    align-items: center;
+    &-avatar {
+      width: 50px;
+      height: 50px;
+      border: white 1px solid;
+      margin-right: 10px;
+    }
   }
   .modal-body {
     margin: 20px 0;
   }
-  .modal-default-button {
+  .modal-post-img {
+    width: 50%;
+  }
+  .delimiter {
+    margin-top: 30px;
+    margin-bottom: 15px;
+    border: 0;
+    border-top: 1px solid #eee;
+  }
+  .comments {
+    margin-bottom: 20px;
+    display: flex;
+  }
+  .icon-btn {
+    border: none;
+    font-size: 13px;
+    background-color: transparent;
+    text-shadow: none;
+    padding: 0;
     float: right;
+    margin-left: 10px;
+    &:hover {
+      border: none;
+      color: #FD2E02;
+    }
+  }
+  .modal-footer {
+    text-align: center;
   }
 </style>
 

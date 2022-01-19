@@ -1,30 +1,31 @@
 <template>
-  <section>
-    <form>
-      <div class="row">
-        <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
-          <h1>Se connecter à Groupomania</h1>
-          <hr>
-          <div class="form-group">
-            <label for="email">Email ou pseudo</label>
-            <input type="text" id="email" class="form-control" v-model="user.email">
-          </div>
-          <div class="form-group">
-            <label for="password">Mot de passe</label>
-            <input type="password" id="password" class="form-control" v-model="user.password">
-          </div>
+  <div class="padding-top-page page-height">
+    <div class="row">
+      <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
+        <img class="logo-icon-width" src="../assets/icon.png" alt="Logo Groupomania">
+        <h1>Se connecter à <span class="red-word">Groupomania</span></h1>
+        <div class="form-container">
+          <form>
+            <div class="form-group">
+              <label for="email" class="bold-text">Email ou pseudo</label>
+              <input type="text" id="email" class="form-control" v-model="user.email">
+            </div>
+            <div class="form-group">
+              <label for="password" class="bold-text">Mot de passe</label>
+              <input type="password" id="password" class="form-control" v-model="user.password">
+            </div>
+          </form>
         </div>
       </div>
-      <hr>
-      <div class="row">
-        <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
-          <button class="btn btn-primary" @click.prevent="onSubmit">Je me connecte !
-          </button>
-          <p>Vous n'avez pas encore de compte ? <router-link to="/inscription">S'inscrire</router-link></p>
-        </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
+        <button class="btn-margin-y" @click.prevent="onSubmit">Je me connecte !
+        </button>
+        <p>Vous n'avez pas encore de compte ? <router-link to="/inscription"><span class="red-word red-link bold-text underline-text">S'inscrire</span></router-link></p>
       </div>
-    </form>
-  </section>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -56,5 +57,5 @@
   };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 </style>

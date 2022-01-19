@@ -91,6 +91,32 @@ exports.getProfile = (req, res, next) => {
     .catch(error => res.status(404).json({ error }));
 };
 
+// exports.updateProfile = (req, res, next) => {
+//   const newPassword = req.body.newPassword;
+//   let userObject = {
+//     firstName: req.body.firstName,
+//     lastName: req.body.lastName,
+//     userName: req.body.userName,
+//     jobTitle: req.body.jobTitle,
+//     email: req.body.email
+//   }
+//   if (newPassword) {
+//     bcrypt.hash(newPassword, 10)
+//       .then(hash => { 
+//         userObject.password = hash
+//       })
+//   }
+//   if (req.file) {
+//     userObject = {
+//       ...userObject,
+//       avatar: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+//     }   
+//   }
+//   User.update(userObject, { where: { id: getUserDecodedToken(req) }})
+//     .then(() => res.status(200).json({ message: 'Profile updated successfully !'}))
+//     .catch(error => res.status(400).json({ error }));  
+// }
+
 exports.updateProfile = (req, res, next) => {
   const newPassword = req.body.newPassword;
   let userObject = {
@@ -128,10 +154,6 @@ exports.updateProfile = (req, res, next) => {
       }
     })
     .catch(error => res.status(500).json({ error }));
-
-  // User.update(userObject, { where: { id: getUserDecodedToken(req) }})
-  //   .then(() => res.status(200).json({ message: 'Profile updated successfully !'}))
-  //   .catch(error => res.status(400).json({ error }));  
 }
 
 exports.deleteProfile = (req, res, next) => {

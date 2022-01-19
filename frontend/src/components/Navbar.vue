@@ -18,3 +18,15 @@
     }
   }
 </script>
+
+<style lang="scss">
+  #nav {
+    padding: 30px;
+    a {
+      font-weight: bold;
+      &.router-link-exact-active {
+        color: #FD2E02;
+      }
+    }
+  }
+</style>

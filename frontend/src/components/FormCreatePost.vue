@@ -1,18 +1,18 @@
 <template>
-  <div class="post-form">
-    <div class="form-group">
-      <i class="far fa-comment-dots"></i>
+  <div class="form-container">
+    <p id="text-margin-bottom" class="bold-text font-size-medium">Un nouveau <span class="red-word">gif</span> à partager ?</p>
+    <p id="text-margin-top">Envoyez-le à vos collègues !</p>
+    <div class="form-group message-margin">
       <label for="message"></label>
       <input type="text" id="message" class="form-control" v-model="message" placeholder="Mon message" required>
     </div>
-    <div class="form-group">
-      <button @click="uploadFile" type="button" class="btn-invisible"></button>
-      <i class="far fa-file-image"></i>      
+    <div class="form-group image-upload-post">
       <label for="imageUrl"></label>
-      <input type="file" ref="fileUpload" @change="onFileSelected" accept="image/*" id="imageUrl" class="form-control">
+      <input type="file" ref="fileUpload" @change="onFileSelected" accept="image/*" id="imageUrl" class="form-control margin-bottom-0">
+      <button @click="uploadFile" type="button" class="btn-invisible btn-invisible-post"></button>
     </div>
     <button @click.prevent="onSubmit">Publier</button>
-</div>
+  </div>
 </template>
 
 <script>
@@ -43,14 +43,22 @@
 </script>
 
 <style lang="scss">
-  .btn-invisible {
-    display: flex;
-    align-items: center;
-    color: #3f3d56;
-    border: none;
-    background-color: transparent;
-    &:hover, &:focus {
-        color: white;
-    }
+  #text-margin-top {
+    margin-top: 5px;
+  }
+  #text-margin-bottom {
+    margin-bottom: 5px;
+  }
+  .margin-bottom-0 {
+    margin-bottom: 0 !important;
+  }
+  .message-margin {
+    margin: 25px 0 0 0;
+  }
+  .image-upload-post > input[type=file] {
+    margin-bottom: 15px !important;
+  }
+  .btn-invisible-post {
+    top: 444px;
   }
 </style>
