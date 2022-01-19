@@ -2,7 +2,7 @@
   <div class="comment-form">
     <div class="form-group full-width">
       <label for="content"></label>
-      <input type="text" id="content" class="form-control" v-model="content" placeholder="Votre commentaire..." required>
+      <input type="text" id="content" class="form-control" v-model="content" placeholder="Votre commentaire..." minlength="1" required>
     </div>
     <button class="comment-form-btn" @click.prevent="onSubmit">Envoyer</button>
 </div>

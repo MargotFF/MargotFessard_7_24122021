@@ -7,6 +7,7 @@ const MIME_TYPES = {
   'image/gif': 'gif',
 };
 
+// Handle the storage of images uploaded
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
     callback(null, 'images');

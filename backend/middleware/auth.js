@@ -1,5 +1,6 @@
 const { getUserDecodedToken } = require('../utils/index');
 
+// Secure the routes by checking if the user is the one authenticated
 module.exports = (req, res, next) => {
   try {
     const userId = getUserDecodedToken(req);

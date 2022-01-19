@@ -4,7 +4,7 @@
     <p id="text-margin-top">Envoyez-le à vos collègues !</p>
     <div class="form-group message-margin">
       <label for="message"></label>
-      <input type="text" id="message" class="form-control" v-model="message" placeholder="Mon message" required>
+      <input type="text" id="message" class="form-control" v-model="message" placeholder="Mon message" minlength="1" required>
     </div>
     <div class="form-group image-upload-post">
       <label for="imageUrl"></label>

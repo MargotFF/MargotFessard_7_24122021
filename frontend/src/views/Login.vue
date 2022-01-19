@@ -51,7 +51,10 @@
             localStorage.setItem('groupomania:admin', JSON.stringify(response.data.admin))
             this.$router.push('/groupomania')
           })
-          .catch(error => console.error(error.response))
+          .catch(error => {
+            console.error(error.response)
+            alert("Votre identifiant ou mot de passe est incorrect !")
+          })
       }
     }
   };

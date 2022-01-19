@@ -68,7 +68,10 @@
               console.log(response.data)
               this.$router.push('/connexion')
             })
-            .catch(error => console.error(error.response))
+            .catch(error => {
+              console.error(error.response)
+              alert("Merci de saisir et de vérifier toutes les informations saisies !")
+            })
       }    
     }
   };
