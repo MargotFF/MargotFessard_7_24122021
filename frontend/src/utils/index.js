@@ -13,7 +13,7 @@ export function dateFormat(date) {
 
 export function isAdmin() {
   const isAdmin = localStorage.getItem('groupomania:admin');
-  return isAdmin === Boolean(isAdmin);
+  return Boolean(isAdmin) === true;
 }
 
 export function getLoggedUserId() {
