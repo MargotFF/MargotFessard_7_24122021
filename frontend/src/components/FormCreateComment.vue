@@ -1,7 +1,7 @@
 <template>
   <div class="comment-form">
     <div class="form-group full-width">
-      <label for="content"></label>
+      <label for="content" class="label-text">Commentaire</label>
       <input type="text" id="content" class="form-control" v-model="content" placeholder="Votre commentaire..." minlength="1" required>
     </div>
     <button class="comment-form-btn" @click.prevent="onSubmit">Envoyer</button>
@@ -40,7 +40,7 @@
     &-btn {
       border-radius: 0;
       padding: 0;
-      margin: 0;
+      margin: 22px 0 0 0;
       padding: 0 15px;
       font-size: 13px;
       &:hover {

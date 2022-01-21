@@ -127,6 +127,9 @@ export default {
     box-shadow: 0 1px 2px rgba(0,0,0,0.2);
     object-fit: cover;
   }
+  .label-text {
+    font-size: 0;
+  }
   @media (max-width: 1024px) {
     .form-container {
       width: 60%;

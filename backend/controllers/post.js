@@ -62,22 +62,9 @@ exports.updatePost = (req, res, next) => {
       message: req.body.message,
       imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     } : { message: req.body.message };
-  Post.findOne({ where: { id: req.params.id } })
-    .then((post) => {
-      if (post.imageUrl != null) {
-        const filename = post.imageUrl.split('/images/')[1];
-        fs.unlink(`images/${filename}`, () => {
-          Post.update({ ...postObject }, { where: { id: req.params.id } })
-            .then(() => res.status(200).json({ message: 'Post updated successfully !'}))
-            .catch(error => res.status(400).json({ error }));
-        })
-      } else {
-        Post.update({ ...postObject }, { where: { id: req.params.id } })
-          .then(() => res.status(200).json({ message: 'Post updated successfully !'}))
-          .catch(error => res.status(400).json({ error }));
-      }
-    })
-    .catch(error => res.status(500).json({ error }));
+  Post.update({ ...postObject }, { where: { id: req.params.id } })
+    .then(() => res.status(200).json({ message: 'Post updated successfully !'}))
+    .catch(error => res.status(400).json({ error }));
 };
   
 exports.deletePost = (req, res, next) => {

@@ -3,11 +3,11 @@
     <p id="text-margin-bottom" class="bold-text font-size-medium">Un nouveau <span class="red-word">gif</span> à partager ?</p>
     <p id="text-margin-top">Envoyez-le à vos collègues !</p>
     <div class="form-group message-margin">
-      <label for="message"></label>
+      <label for="message" class="label-text">Message</label>
       <input type="text" id="message" class="form-control" v-model="message" placeholder="Mon message" minlength="1" required>
     </div>
     <div class="form-group image-upload-post">
-      <label for="imageUrl"></label>
+      <label for="imageUrl" class="label-text">Image</label>
       <input type="file" ref="fileUpload" @change="onFileSelected" accept="image/*" id="imageUrl" class="form-control margin-bottom-0">
       <button @click="uploadFile" type="button" class="btn-invisible btn-invisible-post"></button>
     </div>
